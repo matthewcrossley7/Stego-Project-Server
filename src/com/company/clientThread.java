@@ -12,6 +12,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.sql.Timestamp;
 public class clientThread extends Thread {
+    String folderLocation="C:\\Users\\mcrossley\\IdeaProjects\\Stego Server\\stored Images\\";
     Socket socket;
     Connection conn;
     public clientThread(Socket socket){
@@ -238,7 +239,7 @@ public class clientThread extends Thread {
                         }
                         //image string is converted from base64 to byte array and then saved in local filesystem with filename of generated key
                         byte[] imageByteArray = decodeImage(image);
-                        FileOutputStream imageOutFile = new FileOutputStream("C:\\Users\\mcrossley\\IdeaProjects\\Stego Server\\stored Images\\"+String.valueOf(generatedKey) +".png");
+                        FileOutputStream imageOutFile = new FileOutputStream(folderLocation+String.valueOf(generatedKey) +".png");
                         imageOutFile.write(imageByteArray);
                         imageOutFile.close();
                         break;
@@ -272,7 +273,7 @@ public class clientThread extends Thread {
                         //for each message retrieved from query
                         while (rs.next()) {
                             //open relevant image file and convert to a string value
-                            File file = new File("C:\\Users\\mcrossley\\IdeaProjects\\Stego Server\\stored Images\\"+rs.getString("imageID")+".png");
+                            File file = new File(folderLocation+rs.getString("imageID")+".png");
                             FileInputStream imageInFile = new FileInputStream(file);
                             byte imageData[] = new byte[(int) file.length()];
                             imageInFile.read(imageData);
@@ -371,7 +372,8 @@ public class clientThread extends Thread {
                 //converts the JSON object to a string and returns it back to client
                 pw.println(returnJSON.toString());
             } catch (IOException | SQLException e) {
-                System.out.println("Exception");
+
+                e.printStackTrace();
                 return;
 
             }
